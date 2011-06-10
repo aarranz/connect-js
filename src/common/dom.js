@@ -140,7 +140,7 @@ FB.provide('Dom', {
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = src;
-    return document.getElementsByTagName('HEAD')[0].appendChild(script);
+    return document.getElementsByTagName('head')[0].appendChild(script);
   },
 
   /**
@@ -173,7 +173,7 @@ FB.provide('Dom', {
       var style = document.createElement('style');
       style.type = 'text/css';
       style.textContent = styles;
-      document.getElementsByTagName('HEAD')[0].appendChild(style);
+      document.getElementsByTagName('head')[0].appendChild(style);
     } else {
       try {
         document.createStyleSheet().cssText = styles;
