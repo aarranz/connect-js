@@ -134,23 +134,6 @@ FB.provide('Content', {
 
 //#JSCOVERAGE_IF
     if (document.attachEvent) {
-      var html = (
-        '<iframe' +
-          ' id="' + opts.id + '"' +
-          ' name="' + opts.name + '"' +
-          (opts.className ? ' class="' + opts.className + '"' : '') +
-          ' style="border:none;' +
-                  (opts.width ? 'width:' + opts.width + 'px;' : '') +
-                  (opts.height ? 'height:' + opts.height + 'px;' : '') +
-                  '"' +
-          ' src="' + opts.url + '"' +
-          ' frameborder="0"' +
-          ' scrolling="no"' +
-          ' allowtransparency="true"' +
-          ' onload="FB.Content._callbacks.' + guid + '()"' +
-        '></iframe>'
-      );
-
       // There is an IE bug with iframe caching that we have to work around. We
       // need to load a dummy iframe to consume the initial cache stream. The
       // setTimeout actually sets the content to the HTML we created above, and
@@ -174,7 +157,23 @@ FB.provide('Content', {
       // the innerHTML is changed right away. We need to break apart the two
       // with this setTimeout 0 which seems to fix the issue.
       window.setTimeout(function() {
-        opts.root.innerHTML = html;
+        var style, iframe = document.createElement('iframe');
+        iframe.setAttribute('id', opts.id);
+        iframe.setAttribute('name', opts.name);
+        if (opts.className) {
+          iframe.className = opts.className;
+        }
+        style = "border:none;" +
+          (opts.width ? 'width:' + opts.width + 'px;' : '') +
+          (opts.height ? 'height:' + opts.height + 'px;' : '');
+        iframe.setAttribute('style', style);
+        iframe.setAttribute('src', opts.url);
+        iframe.setAttribute('frameborder', 0);
+        iframe.setAttribute('scrolling', 'no');
+        iframe.setAttribute('allowtransparency', 'true');
+        iframe.setAttribute('onload', 'FB.Content._callbacks.' + guid + '()');
+        opts.root.innerHTML = "";
+        opts.root.appendChild(iframe);
       }, 0);
     } else {
       // This block works for all non IE browsers. But it's specifically
