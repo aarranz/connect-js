@@ -211,15 +211,21 @@ FB.provide('XFBML', {
    *
    * @access private
    * @param dom {DOMElement} the root DOM node
-   * @param xmlns {String} the XML namespace
+   * @param xmlns {String} the XML namespace prefix
    * @param localName {String} the unqualified tag name
    * @return {DOMElementCollection}
    */
   _getDomElements: function(dom, xmlns, localName) {
     // Different browsers behave slightly differently in handling tags
     // with custom namespace.
-    var fullName = xmlns + ':' + localName;
+    if (dom.lookupNamespaceURI) {
+        var namespace = dom.lookupNamespaceURI(xmlns);
+        if (namespace !== null) {
+            return dom.getElementsByTagNameNS(namespace, localName);
+        }
+    }
 
+    var fullName = xmlns + ':' + localName;
     switch (FB.Dom.getBrowserType()) {
     case 'mozilla':
       // Use document.body.namespaceURI as first parameter per
